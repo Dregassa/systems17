@@ -7,7 +7,7 @@ void subserver(int from_client);
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
-    remove("wkp");
+    remove("luigi");
     exit(0);
   }
 }

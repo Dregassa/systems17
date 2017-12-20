@@ -1,8 +1,9 @@
 #include "pipe_networking.h"
+#include <signal.h>
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
-    exit(0);
+	exit(0);
   }
 }
 
