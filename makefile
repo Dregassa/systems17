@@ -1,4 +1,4 @@
-forking: client fserver
+all: client fserver
 
 fserver: forking_server.o pipe_networking.o
 	gcc -o server forking_server.o pipe_networking.o
@@ -16,5 +16,6 @@ pipe_networking.o: pipe_networking.c pipe_networking.h
 	gcc -c pipe_networking.c
 
 clean:
+	rm client server
 	rm *.o
 	rm *~

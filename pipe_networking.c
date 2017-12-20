@@ -11,19 +11,14 @@
 
   returns the file descriptor for the upstream pipe.
   =========================*/
-int server_setup() {
-	mkfifo("luigi");
-	int up = open("luigi", O_RDONLY);
-	char buffer [BUFFER_SIZE];
-	read(buffer, "luigi", BUFFER_SIZE);
-	int f = fork();
-	if (f != 0){//child
-		server_connect(atoi(buffer));
-	}
-		
-	remove("luigi");
+int server_setup() {	
+	mkfifo("luigi", 0600);
+	printf("[server]: Loading...");
 	
-	return -1;
+	int from_client = open("luigi", O_RDONLY);
+	remove("luigi");	
+	
+	return from_client;
 }
 
 
@@ -36,8 +31,15 @@ int server_setup() {
   returns the file descriptor for the downstream pipe.
   =========================*/
 int server_connect(int from_client) {
-	
-	return -1;
+	char buffer[HANDSHAKE_BUFFER_SIZE];
+
+	read(from_client, buffer, HANDSHAKE_BUFFER_SIZE);
+	int to_client = open(buffer, O_WRONLY);
+	write(to_client, ACK, HANDSHAKE_BUFFER_SIZE);     
+
+	read(from_client, buffer, HANDSHAKE_BUFFER_SIZE);
+	printf("[subserver %d]: recieved %s\n", getpid(), buffer);
+	return to_client;
 }
 
 /*=========================
