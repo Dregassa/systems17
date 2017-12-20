@@ -28,18 +28,16 @@ int server_setup() {
 
   returns the file descriptor for the downstream pipe.
   =========================*/
-int server_connect(int from_client) {
-		char buffer[BUFFER_SIZE];
-	  read(from_client, buffer, sizeof(buffer));
-	  printf("server recieved: %s\n", buffer);
+int server_connect(int from_client) {	char buffer[HANDSHAKE_BUFFER_SIZE];
 
-	  int down = open(buffer, O_WRONLY);
-	  write(down, ACK, sizeof(buffer));
+	read(from_client, buffer, HANDSHAKE_BUFFER_SIZE);
+	int to_client = open(buffer, O_WRONLY);
+	write(to_client, ACK, HANDSHAKE_BUFFER_SIZE);
 
-	  read(from_client, buffer, sizeof(buffer));
-	  printf("received ack: %s\n", buffer);
-	  printf("connect done\n");
-	  return down;
+	read(from_client, buffer, HANDSHAKE_BUFFER_SIZE);
+	printf("[subserver %d]: recieved %s\n", getpid(), buffer);
+	return to_client;
+
 }
 
 /*=========================
@@ -95,7 +93,7 @@ int client_handshake(int *to_server) {
 
   //send pp name to server
   printf("[client] handshake: connecting to wkp\n");
-  *to_server = open( "luigi", O_WRONLY, 0);
+  *to_server = open( "luigi", O_WRONLY, 0666);
 
   if ( *to_server == -1 )
     exit(1);

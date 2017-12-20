@@ -1,12 +1,13 @@
 #include "pipe_networking.h"
 #include <signal.h>
+#include <ctype.h>
 
 void process(char *s);
 void subserver(int from_client);
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
-    remove("luigi");
+    remove("wkp");
     exit(0);
   }
 }
@@ -22,6 +23,7 @@ void subserver(int from_client) {
     write(to_client, input, sizeof(input));
     printf("sent modified text to client!\n");
   }
+  exit(0);
 }
 
 void process(char * s) {
@@ -48,9 +50,8 @@ int main(){
       subserver(from_client);
     } else{
      remove("luigi");
-     printf("[server] handshake: removed wkp\n");
+     printf("removed wkp\n");
      close(from_client);
    }
   }
   return 0;
-}
