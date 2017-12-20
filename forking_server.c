@@ -32,6 +32,7 @@ void process(char * s) {
     s[x] = s[x] + 1;
     x++;
   }
+  s[x] = 0;
 }
 
 int main(){
@@ -55,3 +56,4 @@ int main(){
    }
   }
   return 0;
+}
